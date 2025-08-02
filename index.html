@@ -117,7 +117,9 @@
       const enterButton = document.getElementById('enter');
 
       const soundEffect = document.getElementById('soundEffect');
-
+      // const allowedKeysRegex = /[0-9+\-*/.]/;
+      // const allowedKeysRegex = /[0-9+\-*/.()pisqrtco]/;
+      const allowedKeysRegex = /^[0-9+\-*/.()a-z^\[\]\s]*$/;
       function calculateExpression() {
         const expression = calculatorInput.value;
         const sanitizedExpression = expression
@@ -255,41 +257,73 @@
 
       // calculatorInput.addEventListener('input', checkExpression);
       // calculatorInput.addEventListener('change', checkExpression);
+      document.addEventListener('paste', (event) => {
+        // 1. 붙여넣기 이벤트의 기본 동작을 막습니다.
+        // 이렇게 해야 브라우저가 입력 필드에 직접 붙여넣지 않습니다.
+        event.preventDefault();
+        
+        // 2. 클립보드에 있는 텍스트 데이터를 가져옵니다.
+        const pasteText = event.clipboardData.getData('text/plain');
+        
+        if (allowedKeysRegex.test(pasteText)) {
+          // 4. 유효성 검사를 통과하면 calculatorInput에 값을 추가합니다.
+          calculatorInput.value += pasteText;
+        } else {
+          // 유효하지 않은 문자가 포함된 경우
+          console.log('잘못된 형식의 텍스트입니다. 붙여넣기가 차단되었습니다.');
+        }
+      });
+
 
       document.addEventListener('keydown', (event) => {
         // const output = document.getElementById('output');
-        const keyName = event.key.toLowerCase();
+        const keyName = event.key;
         const keyCode = event.code;
 
-        if (event.ctrlKey || event.altKey || event.metaKey || event.key.length > 1) {
-          // Esc, Enter, Backspace와 같은 기능 키는 별도 처리
-          if (keyName === 'Enter') {
+        if (keyName === 'Enter') {
           
-            // sendEnterKeyEvent();
-            enterClicked()
-            event.preventDefault();
-            
-          }
-          else if (keyName === 'Backspace') {
-            calculatorInput.value = calculatorInput.value.slice(0, -1);
-            checkExpression();
-            
-          }
-          else if (keyName === 'Escape') {
-            
+          // sendEnterKeyEvent();
+          enterClicked()
+          event.preventDefault();
+          return;
+        }
+        else if (keyName === 'Backspace') {
+          // 'Backspace' 키를 누르면 마지막 글자 제거
+          calculatorInput.value = calculatorInput.value.slice(0, -1);
+          // checkExpression();
+          return;
+        } else if (keyName === 'Escape') {
+          calculatorInput.value = '';
+        }
+
+        if (event.shiftKey) {
+          if (keyName !== 'Shift') {
+            calculatorInput.value += keyName;
           }
           return;
         }
 
-        console.log(`키가 눌렸습니다: "${keyName}" (코드: ${keyCode})`);
-        // const allowedKeysRegex = /[0-9+\-*/.]/;
-        // const allowedKeysRegex = /[0-9+\-*/.()pisqrtco]/;
-        const allowedKeysRegex = /^[0-9+\-*/.()a-z^\[\]\s]*$/;
+        if (event.ctrlKey) {
+          // if (keyName !== 'Ctrl') {
+          //   calculatorInput.value += keyName;
+          // }
+          return;
+        }
 
-        if (allowedKeysRegex.test(keyName)) {
+        if (event.altKey) {
+          // if (keyName !== 'Ctrl') {
+          //   calculatorInput.value += keyName;
+          // }
+          return;
+        }
+
+        console.log(`키가 눌렸습니다: "${keyName}" (코드: ${keyCode})`);
+
+        const newkeyName = keyName.toLowerCase();
+        if (allowedKeysRegex.test(newkeyName)) {
           // 허용된 키(숫자, 연산자, 소수점)만 입력
-          calculatorInput.value += keyName;
-          checkExpression();
+          calculatorInput.value += newkeyName;
+          // checkExpression();
         }
       });
 
