@@ -27,14 +27,23 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
 
-      - name: Set up Google Cloud CLI # 3. Google Cloud CLI 설치 (gsutil 포함)
-        uses: 'google-github-actions/setup-gcloud@v2'
+      - name: Install gsutil
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: 'gsutil'
 
-      - name: Sync HTML files to GCS # GCS에 파일 동기화
-        run: |
-          # gcs 버킷의 모든 내용을 삭제
-          gsutil -m rm -r "gs://${{ env.GCP_BUCKET_NAME }}/*"
+      - name: Delete existing GCS bucket contents
+        run: gsutil -m rm -r "gs://gcalc.nonda.info/*"
 
-          # .html 파일만 버킷에 업로드
-          gsutil -m rsync -r -x '^(?!.*\.html$).*' . gs://${{ env.GCP_BUCKET_NAME }}
-        shell: bash
+
+      # - name: Set up Google Cloud CLI # 3. Google Cloud CLI 설치 (gsutil 포함)
+      #   uses: 'google-github-actions/setup-gcloud@v2'
+
+      # - name: Sync HTML files to GCS # GCS에 파일 동기화
+      #   run: |
+      #     # gcs 버킷의 모든 내용을 삭제
+      #     gsutil -m rm -r "gs://${{ env.GCP_BUCKET_NAME }}/*"
+
+      #     # .html 파일만 버킷에 업로드
+      #     gsutil -m rsync -r -x '^(?!.*\.html$).*' . gs://${{ env.GCP_BUCKET_NAME }}
+      #   shell: bash
