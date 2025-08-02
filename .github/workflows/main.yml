@@ -38,16 +38,11 @@ jobs:
       - name: Set up Google Cloud CLI # 3. Google Cloud CLI 설치
         uses: 'google-github-actions/setup-gcloud@v2'
 
-      - name: Sync HTML files to GCS # 4. GCS에 파일 동기화
+      - name: Sync HTML files to GCS # GCS에 파일 동기화
         run: |
-          # gcloud gsutil rsync 명령어로 프로젝트 루트의 .html 파일을 GCS 버킷에 동기화합니다.
-          # -d 옵션: 소스(.)에 없는 파일은 대상(GCS)에서 삭제합니다.
-          # -r 옵션: 하위 디렉토리를 포함한 재귀적 동기화 (여기서는 .html만 해당)
-          # -J 옵션: JSON 형식의 로깅
-          # **.html: 프로젝트 루트의 모든 하위 디렉토리에서 .html 파일을 찾습니다.
           gcloud storage rsync . gs://${{ env.GCP_BUCKET_NAME }}/ \
             --recursive \
-            --exclude-directories \
+            --exclude-directory \
             --include="*.html" \
-            --delete-unmatched-urls
+            --delete-unmatched-destination-objects
         shell: bash
