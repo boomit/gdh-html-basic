@@ -53,28 +53,14 @@
 
 
           <div class="flex-grow grid grid-cols-3 gap-2">
-            <button data-value="7" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">7</button>
-            <button data-value="8" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">8</button>
-            <button data-value="9" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">9</button>
-          
-            <button data-value="4" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">4</button>
-            <button data-value="5" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">5</button>
-            <button data-value="6" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">6</button>
-          
-            <button data-value="1" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">1</button>
-            <button data-value="2" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">2</button>
-            <button data-value="3" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">3</button>
-            
-            <button data-value="." class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">.</button>
-            <button data-value="0" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">0</button>
-            <button data-value="00" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">00</button>
-            <button data-value="000" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900 active:scale-95 active:ring-4 active:ring-blue-300 transition-all">000</button>
-            <!-- <button data-value="7" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">7</button>
+            <button data-value="7" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">7</button>
             <button data-value="8" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">8</button>
             <button data-value="9" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">9</button>
+
             <button data-value="4" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">4</button>
             <button data-value="5" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">5</button>
             <button data-value="6" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">6</button>
+
             <button data-value="1" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">1</button>
             <button data-value="2" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">2</button>
             <button data-value="3" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">3</button>
@@ -82,10 +68,10 @@
             <button data-value="." class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">.</button>
             <button data-value="0" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">0</button>
             <button data-value="00" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">00</button>
-            <button data-value="000" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">000</button> -->
+            <button data-value="000" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">000</button>
           </div>
     
-          <div class="grid grid-cols-1 gap-2">
+          <div class="flex-grow grid grid-cols-2 gap-2">
             <button data-value="(" class="p-4 bg-orange-500 hover:bg-orange-600 rounded-md shadow-sm font-bold text-xl text-white">(</button>
             <button data-value=")" class="p-4 bg-orange-500 hover:bg-orange-600 rounded-md shadow-sm font-bold text-xl text-white">)</button>
             <button data-value="%" class="p-4 bg-orange-500 hover:bg-orange-600 rounded-md shadow-sm font-bold text-xl text-white">%</button>
@@ -135,9 +121,8 @@
         const sanitizedExpression = expression
           .replace(/÷/g, '/')  // ÷를 /로 변환
           .replace(/×/g, '*'); // ×도 *로 변환 (사용자가 입력할 수 있으므로 함께 처리하는 것이 좋습니다)
-      
 
-        try {
+          try {
           // 전역 객체 math를 사용하여 수식 계산
           const result = math.evaluate(sanitizedExpression);
           resultOutput.value = `계산식: ${expression}\n결과: ${result}`;
@@ -152,35 +137,6 @@
           console.error(error);
         }
       }
-
-      // function calculateExpression(value) {
-      //   const allowedCharsRegex = /^[0-9+\-*/%.()×÷\s]*$/;
-      //   const rawExpression = calculatorInput.value;
-
-      //   if (!allowedCharsRegex.test(rawExpression)) {
-      //     resultOutput.textContent = '허용되지 않는 문자가 포함되었습니다.';
-      //     return; // 허용되지 않는 문자가 있으면 즉시 함수 종료
-      //   }
-
-      //   const expression = rawExpression.replace(/÷/g, '/').replace(/×/g, '*');
-      //   // const expression = calculatorInput.value.replace(/÷/g, '/').replace(/×/g, '*');
-      //   console.log('계산식:', expression);
-
-      //   try {
-      //     const result = new Function('return ' + expression)();
-      //     resultOutput.value = `계산식: ${expression}\n결과: ${result}`;
-      //     this.value = result;
-      //     // resultDisplay.textContent = result;
-
-      //     if (soundEffect) {
-      //           soundEffect.currentTime = 0; // 소리를 처음부터 다시 재생
-      //           soundEffect.play();
-      //         }
-      //   } catch (error) {
-      //     resultOutput.value = `오류: 잘못된 계산식입니다.`;
-      //     console.error('계산 오류:', error);
-      //   }
-      // }      
     
       buttons.forEach(button => {
         button.addEventListener('click', () => {
@@ -207,15 +163,6 @@
           event.preventDefault();
           try {
             calculateExpression(value);
-            // const expression = this.value.replace(/÷/g, '/').replace(/×/g, '*');
-            // const result = eval(expression);
-            // resultOutput.value = `계산식: ${this.value}\n결과: ${result}`;
-            // this.value = result;
-
-            // if (soundEffect) {
-            //   soundEffect.currentTime = 0;
-            //   soundEffect.play();
-            // }
           } catch (error) {
             resultOutput.value = `오류: 잘못된 계산식입니다.`;
           }
