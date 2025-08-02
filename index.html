@@ -6,6 +6,7 @@
     <title>START 페이지</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js"></script>
 
   </head>
   <body>
@@ -22,7 +23,8 @@
       </div> -->
 
       <div class="space-y-4 p-4 max-w-lg mx-auto">
-        <div class="border border-blue-300">
+        <!-- <div class="border border-blue-300"> -->
+        <div>
           <label for="calculator-input" class="block text-sm font-medium text-gray-700 mb-1">계산식</label>
           <input
             type="text"
@@ -127,6 +129,58 @@
       const buttons = document.querySelectorAll('button[data-value]');
 
       const soundEffect = document.getElementById('soundEffect');
+
+      function calculateExpression() {
+        const expression = calculatorInput.value;
+        const sanitizedExpression = expression
+          .replace(/÷/g, '/')  // ÷를 /로 변환
+          .replace(/×/g, '*'); // ×도 *로 변환 (사용자가 입력할 수 있으므로 함께 처리하는 것이 좋습니다)
+      
+
+        try {
+          // 전역 객체 math를 사용하여 수식 계산
+          const result = math.evaluate(sanitizedExpression);
+          resultOutput.value = `계산식: ${expression}\n결과: ${result}`;
+          calculatorInput.value = '';
+
+          if (soundEffect) {
+              soundEffect.currentTime = 0;
+              soundEffect.play();
+          }          
+        } catch (error) {
+          resultOutput.value = `오류: 잘못된 계산식입니다.`;
+          console.error(error);
+        }
+      }
+
+      // function calculateExpression(value) {
+      //   const allowedCharsRegex = /^[0-9+\-*/%.()×÷\s]*$/;
+      //   const rawExpression = calculatorInput.value;
+
+      //   if (!allowedCharsRegex.test(rawExpression)) {
+      //     resultOutput.textContent = '허용되지 않는 문자가 포함되었습니다.';
+      //     return; // 허용되지 않는 문자가 있으면 즉시 함수 종료
+      //   }
+
+      //   const expression = rawExpression.replace(/÷/g, '/').replace(/×/g, '*');
+      //   // const expression = calculatorInput.value.replace(/÷/g, '/').replace(/×/g, '*');
+      //   console.log('계산식:', expression);
+
+      //   try {
+      //     const result = new Function('return ' + expression)();
+      //     resultOutput.value = `계산식: ${expression}\n결과: ${result}`;
+      //     this.value = result;
+      //     // resultDisplay.textContent = result;
+
+      //     if (soundEffect) {
+      //           soundEffect.currentTime = 0; // 소리를 처음부터 다시 재생
+      //           soundEffect.play();
+      //         }
+      //   } catch (error) {
+      //     resultOutput.value = `오류: 잘못된 계산식입니다.`;
+      //     console.error('계산 오류:', error);
+      //   }
+      // }      
     
       buttons.forEach(button => {
         button.addEventListener('click', () => {
@@ -140,20 +194,7 @@
             // C 버튼: 입력 필드만 초기화
             calculatorInput.value = '';
           } else if (value === '=') {
-            try {
-              const expression = calculatorInput.value.replace(/÷/g, '/').replace(/×/g, '*');
-              const result = eval(expression);
-              
-              resultOutput.value = `계산식: ${calculatorInput.value}\n결과: ${result}`;
-              calculatorInput.value = result;
-
-              if (soundEffect) {
-                soundEffect.currentTime = 0; // 소리를 처음부터 다시 재생
-                soundEffect.play();
-              }
-            } catch (error) {
-              resultOutput.value = `오류: 잘못된 계산식입니다.`;
-            }
+            calculateExpression(value);
           } else {
             calculatorInput.value += value;
           }
@@ -165,15 +206,16 @@
         if (event.key === 'Enter') {
           event.preventDefault();
           try {
-            const expression = this.value.replace(/÷/g, '/').replace(/×/g, '*');
-            const result = eval(expression);
-            resultOutput.value = `계산식: ${this.value}\n결과: ${result}`;
-            this.value = result;
+            calculateExpression(value);
+            // const expression = this.value.replace(/÷/g, '/').replace(/×/g, '*');
+            // const result = eval(expression);
+            // resultOutput.value = `계산식: ${this.value}\n결과: ${result}`;
+            // this.value = result;
 
-            if (soundEffect) {
-              soundEffect.currentTime = 0;
-              soundEffect.play();
-            }
+            // if (soundEffect) {
+            //   soundEffect.currentTime = 0;
+            //   soundEffect.play();
+            // }
           } catch (error) {
             resultOutput.value = `오류: 잘못된 계산식입니다.`;
           }

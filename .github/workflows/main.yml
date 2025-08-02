@@ -1,0 +1,53 @@
+name: Deploy HTML to GCS
+
+# 어떤 이벤트가 발생했을 때 이 워크플로우를 실행할지 정의합니다.
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 push가 발생했을 때 실행
+
+# 워크플로우에서 사용할 환경 변수를 정의합니다.
+env:
+  GCP_BUCKET_NAME: "gcalc.nonda.info"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Repository # 1. GitHub 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Authenticate with Google Cloud # 2. Google Cloud 인증
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
+
+      - name: Install gsutil
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: 'gsutil'
+
+      - name: Delete existing GCS bucket contents
+        run: gsutil -m rm -r "gs://${{ env.GCP_BUCKET_NAME }}/*"
+
+      - name: Set up Google Cloud CLI # 3. Google Cloud CLI 설치
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Sync HTML files to GCS # 4. GCS에 파일 동기화
+        run: |
+          # gcloud gsutil rsync 명령어로 프로젝트 루트의 .html 파일을 GCS 버킷에 동기화합니다.
+          # -d 옵션: 소스(.)에 없는 파일은 대상(GCS)에서 삭제합니다.
+          # -r 옵션: 하위 디렉토리를 포함한 재귀적 동기화 (여기서는 .html만 해당)
+          # -J 옵션: JSON 형식의 로깅
+          # **.html: 프로젝트 루트의 모든 하위 디렉토리에서 .html 파일을 찾습니다.
+          gcloud storage rsync . gs://${{ env.GCP_BUCKET_NAME }}/ \
+            --recursive \
+            --exclude-directories \
+            --include="*.html" \
+            --delete-unmatched-urls
+        shell: bash
