@@ -311,9 +311,11 @@
           // 'Backspace' 키를 누르면 마지막 글자 제거
           calculatorInput.value = calculatorInput.value.slice(0, -1);
           // checkExpression();
+          event.preventDefault();
           return;
         } else if (keyName === 'Escape') {
           calculatorInput.value = '';
+          event.preventDefault();
           return
         }
 
@@ -321,6 +323,11 @@
           if (keyName !== 'Shift') {
             calculatorInput.value += keyName;
           }
+          event.preventDefault();
+          return;
+        }
+
+        if (event.metaKey) {
           return;
         }
 
@@ -329,6 +336,31 @@
         }
 
         if (event.altKey) {
+          return;
+        }
+
+        const disabledKeys = [
+          'CapsLock', 
+          'NumLock', 
+          'Pause', 
+          'ScrollLock',
+          'Insert',
+          'Home',
+          'End',
+          'PageUp',
+          'PageDown',
+          'Delete',
+          'Tab',
+          'ArrowLeft',
+          'ArrowRight',
+          'ArrowUp',
+          'ArrowDown'
+
+        ];
+        if (disabledKeys.includes(keyName)) {
+          // 키의 기본 동작을 막습니다.
+          event.preventDefault();
+          console.log(`${keyName} 키의 기본 동작이 차단되었습니다.`);
           return;
         }
 
