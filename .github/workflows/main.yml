@@ -42,7 +42,16 @@ jobs:
 
       - name: Sync HTML files to GCS # GCS에 파일 동기화
         run: |
-
-          # .html 파일만 버킷에 업로드
+          # .html 파일만 버킷에 업로드하고, 캐시 방지 헤더를 추가
           gsutil -m rsync -r -x '^(?!.*\.html$).*' . gs://${{ env.GCP_BUCKET_NAME }}
-        shell: bash
+          
+          # Cache-Control 헤더 추가 (개발 환경에 적합한 설정)
+          gsutil -m setmeta -h "Cache-Control: public, max-age=0, must-revalidate" gs://${{ env.GCP_BUCKET_NAME }}/*.html
+
+      #   shell: bash
+      # - name: Sync HTML files to GCS # GCS에 파일 동기화
+      #   run: |
+
+      #     # .html 파일만 버킷에 업로드
+      #     gsutil -m rsync -r -x '^(?!.*\.html$).*' . gs://${{ env.GCP_BUCKET_NAME }}
+      #   shell: bash
