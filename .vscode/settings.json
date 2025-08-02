@@ -1,0 +1,60 @@
+{
+    // ----------------------------------------------------
+    // ESLint 설정: JavaScript/TypeScript 코드 품질 유지
+    // ----------------------------------------------------
+    "eslint.workingDirectories": [
+      {
+        "mode": "auto"
+      }
+    ],
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "html"
+    ],
+  
+    // ----------------------------------------------------
+    // Prettier 설정: 코드 자동 포맷팅
+    // ----------------------------------------------------
+    // 기본 포맷터로 Prettier를 설정합니다.
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    // 파일 저장 시 자동으로 포맷팅을 실행합니다.
+    "editor.formatOnSave": true,
+    "prettier.configPath": "./.prettierrc",
+  
+    // ----------------------------------------------------
+    // Tailwind CSS 관련 설정
+    // ----------------------------------------------------
+    // Tailwind CSS IntelliSense 확장 프로그램 설정
+    "tailwindCSS.experimental.classRegex": [
+      "cva\\(([^)]*)\\)",
+      "cn\\(([^)]*)\\)"
+    ],
+    // 자동완성 기능이 HTML 외의 파일에서도 작동하도록 설정합니다.
+    "tailwindCSS.includeLanguages": {
+      "html": "html",
+      "javascript": "javascript",
+      "javascriptreact": "javascriptreact",
+      "typescript": "typescript",
+      "typescriptreact": "typescriptreact"
+    },
+    "tailwindCSS.validate": true,
+  
+    // ----------------------------------------------------
+    // HTML/CSS/JavaScript 기타 설정
+    // ----------------------------------------------------
+    // HTML 파일에서 자동 완성 시 따옴표를 이중 따옴표(")로 사용합니다.
+    "html.autoCreateQuotes": "always",
+    // CSS, JavaScript 파일에 대한 언어별 설정 (선택 사항)
+    "[css]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+  }
