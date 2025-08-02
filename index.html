@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>START 페이지</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="index.css">
   </head>
   <body>
 
@@ -31,6 +31,7 @@
             id="calculator-input"
             name="calculator-input"
             placeholder="예: 10 * 5 + 2"
+            readonly
             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
           >
         </div>
@@ -50,9 +51,8 @@
       <div class="space-y-4 p-4 max-w-lg mx-auto">
   
         <div class="flex gap-2 mt-4">
-
-
           <div class="flex-grow grid grid-cols-3 gap-2">
+            <!-- <button class="special-button" data-value="17">17</button> -->
             <button data-value="7" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">7</button>
             <button data-value="8" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">8</button>
             <button data-value="9" class="p-4 bg-white hover:bg-gray-100 rounded-md shadow-sm font-bold text-lg text-gray-900">9</button>
@@ -79,7 +79,7 @@
             <button data-value="×" class="p-4 bg-orange-500 hover:bg-orange-600 rounded-md shadow-sm font-bold text-xl text-white">×</button>
             <button data-value="-" class="p-4 bg-orange-500 hover:bg-orange-600 rounded-md shadow-sm font-bold text-xl text-white">-</button>
             <button data-value="+" class="p-4 bg-orange-500 hover:bg-orange-600 rounded-md shadow-sm font-bold text-xl text-white">+</button>
-            <button data-value="=" class="p-4 bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm font-bold text-2xl text-white">=</button>
+            <button id="enter" data-value="=" class="p-4 bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm font-bold text-2xl text-white">=</button>
           </div>
         </div>
       </div>
@@ -87,6 +87,7 @@
       <div class="space-y-2 p-4 max-w-lg mx-auto bg-gray-50 rounded-lg shadow-xl">
 
         <div class="grid grid-cols-5 gap-2">
+          <button data-value="BS" class="p-2 bg-red-500 hover:bg-red-600 rounded-md shadow-sm font-bold text-sm text-white"><</button>
           <button data-value="AC" class="p-2 bg-red-500 hover:bg-red-600 rounded-md shadow-sm font-bold text-sm text-white">AC</button>
           <button data-value="CE" class="p-2 bg-red-500 hover:bg-red-600 rounded-md shadow-sm font-bold text-sm text-white hidden">CE</button>
           <button data-value="C" class="p-2 bg-red-500 hover:bg-red-600 rounded-md shadow-sm font-bold text-sm text-white">C</button>
@@ -113,6 +114,7 @@
       const calculatorInput = document.getElementById('calculator-input');
       const resultOutput = document.getElementById('result-output');
       const buttons = document.querySelectorAll('button[data-value]');
+      const enterButton = document.getElementById('enter');
 
       const soundEffect = document.getElementById('soundEffect');
 
@@ -122,7 +124,7 @@
           .replace(/÷/g, '/')  // ÷를 /로 변환
           .replace(/×/g, '*'); // ×도 *로 변환 (사용자가 입력할 수 있으므로 함께 처리하는 것이 좋습니다)
 
-          try {
+        try {
           // 전역 객체 math를 사용하여 수식 계산
           const result = math.evaluate(sanitizedExpression);
           resultOutput.value = `계산식: ${expression}\n결과: ${result}`;
@@ -137,7 +139,81 @@
           console.error(error);
         }
       }
+
+      function checkExpression() {
+        return 
+        console.log("checkExpression called");
+        const expression = calculatorInput.value;
+        const sanitizedExpression = expression
+          .replace(/÷/g, '/')  // ÷를 /로 변환
+          .replace(/×/g, '*'); // ×도 *로 변환 (사용자가 입력할 수 있으므로 함께 처리하는 것이 좋습니다)
+
+        try {
+          // 전역 객체 math를 사용하여 수식 계산
+          const result = math.evaluate(sanitizedExpression);
+
+        } catch (error) {
+          const errorIndex = error.index;
+          let errorMessage = '오류: 잘못된 계산식입니다.';
+
+          if (errorIndex !== undefined) {
+            // 오류 위치를 시각적으로 표시하는 문자열 생성
+            const errorIndicator = ' '.repeat(errorIndex) + '^';
+            errorMessage = `오류: 잘못된 계산식입니다.\n\n${expression}\n${errorIndicator}\n오류 위치를 확인하세요.`;
+          }
+          
+          resultOutput.value = errorMessage;
+          console.error(error);
+        }
+      }
+
+      function evaluateAndHandleError(expression) {
+        // 1. 입력된 수식의 마지막 문자가 연산자인지 확인합니다.
+        const lastChar = expression.trim().slice(-1);
+        const isOperator = ['+', '-', '*', '/'].includes(lastChar);
+        
+        // 2. 수식이 비어있거나 마지막 문자가 연산자일 경우,
+        //    아직 수식이 완성되지 않았다고 판단하여 계산하지 않습니다.
+        if (expression.trim() === '' || isOperator) {
+          return null; // 또는 '수식을 완성하세요'와 같은 메시지를 반환
+        }
+
+        try {
+          // 3. 수식이 완성되었다고 판단되면 계산을 시도합니다.
+          const result = math.evaluate(expression);
+          return result;
+        } catch (error) {
+          // 4. 계산 중 발생하는 명백한 문법 오류를 처리합니다.
+          console.error('잘못된 계산식:', error);
+          
+          // math.js 오류 객체의 index를 사용해 오류 위치를 표시할 수도 있습니다.
+          const errorIndex = error.index;
+          if (errorIndex !== undefined) {
+            const errorIndicator = ' '.repeat(errorIndex) + '^';
+            return `오류: 잘못된 계산식입니다.\n\n${expression}\n${errorIndicator}\n`;
+          }
+          
+          return '오류: 잘못된 계산식입니다.';
+        }
+      }
+
+      function sendEnterKeyEvent() {
+            // calculateExpression(value);
+            const enterKeyEvent = new KeyboardEvent('keydown', {
+              key: 'Enter',
+              code: 'Enter',
+              bubbles: true,   // 이벤트가 DOM 트리를 따라 버블링되도록 설정
+              cancelable: true // 이벤트가 취소될 수 있도록 설정
+            });
+
+            // 생성된 이벤트를 calculatorInput에 전달합니다.
+            document.dispatchEvent(enterKeyEvent);
+      }
     
+      function enterClicked() {
+        enterButton.click();
+      }
+
       buttons.forEach(button => {
         button.addEventListener('click', () => {
           const value = button.dataset.value;
@@ -146,28 +222,84 @@
             // AC 버튼: 입력 필드와 결과 필드 모두 초기화
             calculatorInput.value = '';
             resultOutput.value = '';
+            checkExpression();
           } else if (value === 'C') {
             // C 버튼: 입력 필드만 초기화
             calculatorInput.value = '';
+            checkExpression();
+          } else if (value === 'BS') {
+            // C 버튼: 입력 필드만 초기화
+            calculatorInput.value = calculatorInput.value.slice(0, -1);
+            checkExpression();
           } else if (value === '=') {
-            calculateExpression(value);
+            // sendEnterKeyEvent();
+            calculateExpression();
           } else {
             calculatorInput.value += value;
+            checkExpression();
           }
         });
       });
     
-      // 엔터 키 입력 시 계산 실행 (기존 코드 유지)
-      calculatorInput.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          try {
-            calculateExpression(value);
-          } catch (error) {
-            resultOutput.value = `오류: 잘못된 계산식입니다.`;
+      // // 엔터 키 입력 시 계산 실행 (기존 코드 유지)
+      // calculatorInput.addEventListener('keydown', function(event) {
+      //   if (event.key === 'Enter') {
+      //     event.preventDefault();
+      //     try {
+      //       calculateExpression(value);
+      //     } catch (error) {
+      //       resultOutput.value = `오류: 잘못된 계산식입니다.`;
+      //     }
+      //   }
+      // });
+
+      // calculatorInput.addEventListener('input', checkExpression);
+      // calculatorInput.addEventListener('change', checkExpression);
+
+      document.addEventListener('keydown', (event) => {
+        // const output = document.getElementById('output');
+        const keyName = event.key.toLowerCase();
+        const keyCode = event.code;
+
+        if (event.ctrlKey || event.altKey || event.metaKey || event.key.length > 1) {
+          // Esc, Enter, Backspace와 같은 기능 키는 별도 처리
+          if (keyName === 'Enter') {
+          
+            // sendEnterKeyEvent();
+            enterClicked()
+            event.preventDefault();
+            
           }
+          else if (keyName === 'Backspace') {
+            calculatorInput.value = calculatorInput.value.slice(0, -1);
+            checkExpression();
+            
+          }
+          else if (keyName === 'Escape') {
+            
+          }
+          return;
+        }
+
+        console.log(`키가 눌렸습니다: "${keyName}" (코드: ${keyCode})`);
+        // const allowedKeysRegex = /[0-9+\-*/.]/;
+        // const allowedKeysRegex = /[0-9+\-*/.()pisqrtco]/;
+        const allowedKeysRegex = /^[0-9+\-*/.()a-z^\[\]\s]*$/;
+
+        if (allowedKeysRegex.test(keyName)) {
+          // 허용된 키(숫자, 연산자, 소수점)만 입력
+          calculatorInput.value += keyName;
+          checkExpression();
         }
       });
+
+      // const redButtonClasses = "p-2 bg-red-500 hover:bg-red-600 rounded-md shadow-sm font-bold text-sm text-white";
+      // const specialButtons = document.querySelectorAll('.special-button');
+      // specialButtons.forEach(button => {
+      //   button.className = redButtonClasses;
+      // });
+
+
     </script>
 
   </body>
