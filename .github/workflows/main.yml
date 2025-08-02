@@ -34,7 +34,7 @@ jobs:
 
       - name: Delete existing GCS bucket contents
         # run: gsutil -m rm -r "gs://gcalc.nonda.info/*"
-        run: gsutil -m rm -r -f "gs://gcalc.nonda.info/*"
+        run: gsutil -m rm -r -f "gs://${{ env.GCP_BUCKET_NAME }}/*"
 
 
       # - name: Set up Google Cloud CLI # 3. Google Cloud CLI 설치 (gsutil 포함)
