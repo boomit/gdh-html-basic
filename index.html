@@ -117,29 +117,48 @@
       const enterButton = document.getElementById('enter');
 
       const soundEffect = document.getElementById('soundEffect');
+      const scope = {};
+
       // const allowedKeysRegex = /[0-9+\-*/.]/;
       // const allowedKeysRegex = /[0-9+\-*/.()pisqrtco]/;
-      const allowedKeysRegex = /^[0-9+\-*/.()a-z^\[\]\s]*$/;
+      const allowedKeysRegex = /^[0-9=+\-*/.()a-z^\[\]\s]*$/;
+
       function calculateExpression() {
         const expression = calculatorInput.value;
         const sanitizedExpression = expression
           .replace(/÷/g, '/')  // ÷를 /로 변환
           .replace(/×/g, '*'); // ×도 *로 변환 (사용자가 입력할 수 있으므로 함께 처리하는 것이 좋습니다)
+        const assignmentMatch = expression.match(/^([a-z]+)\s*=\s*(.*)$/);
 
         try {
-          // 전역 객체 math를 사용하여 수식 계산
+          // if (assignmentMatch) {
+          //   // 2. 변수 할당 구문일 경우
+          //   const variableName = assignmentMatch[1]; // 'x'
+          //   const variableValue = math.evaluate(assignmentMatch[2], scope); // 3
+            
+          //   // 스코프 객체에 변수와 값을 저장합니다.
+          //   scope[variableName] = variableValue;
+          //   console.log(`변수 "${variableName}"와 값 "${variableValue}"를 스코프 객체에 저장하여 구성된 계산식: ${scope.stringify()}`);
+          //   resultOutput.value = `계산식: ${scope}\n결과: ${result}`;
+          //   return `${variableName} = ${variableValue}`;
+          // } 
+          
+
           const result = math.evaluate(sanitizedExpression);
           resultOutput.value = `계산식: ${expression}\n결과: ${result}`;
           calculatorInput.value = '';
 
-          if (soundEffect) {
-              soundEffect.currentTime = 0;
-              soundEffect.play();
-          }          
+          // if (soundEffect) {
+          //     soundEffect.currentTime = 0;
+          //     soundEffect.play();
+          // }          
+
         } catch (error) {
           resultOutput.value = `오류: 잘못된 계산식입니다.`;
           console.error(error);
         }
+
+
       }
 
       function checkExpression() {
