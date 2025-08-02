@@ -27,23 +27,14 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
 
-      - name: Install gsutil
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          install_components: 'gsutil'
-
-      # - name: Delete existing GCS bucket contents
-      #   run: gsutil -m rm -r "gs://${{ env.GCP_BUCKET_NAME }}/*"
-
-      - name: Set up Google Cloud CLI # 3. Google Cloud CLI 설치
+      - name: Set up Google Cloud CLI # 3. Google Cloud CLI 설치 (gsutil 포함)
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: Sync HTML files to GCS # GCS에 파일 동기화
         run: |
-          # gcloud storage rsync . gs://${{ env.GCP_BUCKET_NAME }}/ \
-          #   --recursive \
-          #   --exclude-directory \
-          #   --include="*.html" \
-          #   --delete-unmatched-destination-objects
-          gsutil -m rsync -d -r -I "*.html" . gs://${{ env.GCP_BUCKET_NAME }}
+          # gcs 버킷의 모든 내용을 삭제
+          gsutil -m rm -r "gs://${{ env.GCP_BUCKET_NAME }}/*"
+
+          # .html 파일만 버킷에 업로드
+          gsutil -m rsync -r -x '^(?!.*\.html$).*' . gs://${{ env.GCP_BUCKET_NAME }}
         shell: bash
